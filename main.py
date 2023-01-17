@@ -4,9 +4,14 @@ from filter_df import *
 
 def create_result_dataset(client_path, finance_path, countries, mapping_finance):
     client_df = read_csv(client_path)
-    finance_df = ren_columns(read_csv(finance_path), mapping_finance)
+    finance_df = read_csv(finance_path)
+    renamed_finance_df = ren_columns(finance_df, mapping_finance)
 
-    result_df = join_clients_fin(client_df, finance_df, countries)
+    active_finance = filter_financial_by_active(renamed_finance_df)
+    client_from_countries  = filter_clients_by_countries(client_df, countries)
+
+    merged_df = join_df(client_from_countries, active_finance, "id")
+    result_df = select_columns(merged_df, ["email", "credit_card_type", "account_type"])
     result_df.show(result_df.count())
     return result_df
 
@@ -38,10 +43,10 @@ def start_application():
                'cc_mc': 'credit_card_main_currency',
                'a': 'active',
                'ac_t': 'account_type'}
-
     clients_path, financial_path, countries = get_args()
-    print("Startint application with args parsed:")
+    print("Starting application with args parsed:")
     print(clients_path, financial_path, countries)
+
     df = create_result_dataset(clients_path, financial_path, countries, mapping)
     write_csv(df, 'client_data/')
 
