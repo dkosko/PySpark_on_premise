@@ -12,7 +12,7 @@ def filter_clients_by_countries(df, countries:list):
 def filter_financial_by_active(df):
     """Filter financial data for active clients"""
     new_df = (df
-          .filter(df.active == True)
+          .filter(col("active") == True)
           )
     return new_df
 
