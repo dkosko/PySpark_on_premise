@@ -6,7 +6,7 @@ def filter_clients_by_countries(df, countries:list):
     """Filter clients data by countries from list
      and select  necessary columns"""
     df = (df
-          .filter(df.country.isin(countries))
+          .filter(col("country").isin(countries))
           .select('id', 'email'))
     return df
 
@@ -20,6 +20,8 @@ def filter_financial_by_active(df):
 
 
 def join_clients_fin(clients_df, finance_df, countries:list):
+    """Function to merge clients personal data (email)
+    with clients financial data (credit_card_type, account_type)"""
     clients_df = filter_clients_by_countries(clients_df, countries)
     finance_df = filter_financial_by_active(finance_df)
 
