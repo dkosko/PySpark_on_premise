@@ -2,6 +2,7 @@ import argparse
 from handle_csv import *
 from filter_df import *
 
+
 def create_result_dataset(client_path, finance_path, countries, mapping_finance):
     client_df = read_csv(client_path)
     finance_df = read_csv(finance_path)
@@ -44,11 +45,14 @@ def start_application():
                'a': 'active',
                'ac_t': 'account_type'}
     clients_path, financial_path, countries = get_args()
-    print("Starting application with args parsed:")
-    print(clients_path, financial_path, countries)
+    logging.info(f'Got args parsed : {clients_path}, {financial_path}, {countries}')
 
     df = create_result_dataset(clients_path, financial_path, countries, mapping)
+    logging.info(f'Created result dataset')
     write_csv(df, 'client_data/')
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='actions.log', filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    logging.info('Start application')
     start_application()

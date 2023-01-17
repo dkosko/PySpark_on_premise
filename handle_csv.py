@@ -1,3 +1,5 @@
+import logging
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import count, desc , col, max, struct
 
@@ -5,13 +7,13 @@ from pyspark.sql.functions import count, desc , col, max, struct
 
 def read_csv(path):
     spark = SparkSession.builder.appName('spark_app').getOrCreate()
-
+    logging.info(f'Try to read from {path}')
     df = spark.read.csv(
         path,
         header=True,
         inferSchema=True
     )
-
+    logging.info(f'Successfully read from {path}')
     return df
 
 
@@ -19,6 +21,7 @@ def write_csv(df, path):
     (df.coalesce(1).write
      .csv(path, header=True, mode='overwrite')
      )
+    logging.info(f'Successfully writen result dataset to {path}')
 
 
 def ren_columns(df, columns: dict):
