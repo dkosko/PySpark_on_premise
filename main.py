@@ -16,6 +16,7 @@ def create_result_dataset(client_path, finance_path, countries, mapping_finance)
     result_df.show(result_df.count())
     return result_df
 
+
 def get_args():
     """Function gets 3 arguments from comand line:
     clients_data_path
