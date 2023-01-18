@@ -39,6 +39,10 @@ jobs:
   test:
     needs: build
 
+    runs-on: ${{ matrix.os }}
+    matrix:
+      os: [ubuntu-latest, macos-latest, windows-latest]
+
     steps:
       - name: Test with chispa
         run: |
