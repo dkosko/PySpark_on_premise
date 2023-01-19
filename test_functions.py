@@ -1,7 +1,7 @@
 from filter_df import *
 from chispa.dataframe_comparer import *
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import count, desc , col, max
+
 
 spark = SparkSession.builder.appName('Spark_tests').getOrCreate()
 
@@ -114,9 +114,3 @@ def test_drop_column():
     expected_df = (spark.createDataFrame(expected_data, ["id", "country"]))
 
     assert_df_equality(actual_df, expected_df)
-
-test_filter_clients_by_countries()
-test_select_columns()
-test_filter_financial_by_active()
-test_join_df()
-test_drop_column()
