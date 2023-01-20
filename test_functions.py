@@ -5,6 +5,7 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName('Spark_tests').getOrCreate()
 
+
 def test_filter_clients_by_countries():
     source_data = [
         (1, 'France', '@1'),
@@ -13,16 +14,18 @@ def test_filter_clients_by_countries():
         (4, 'Germany', '@4'),
         (5, 'Austria', '@5')
     ]
-    source_df = (spark.createDataFrame(source_data, ["id", "country", "email"]))
+    source_df = (spark.createDataFrame(
+        source_data, ["id", "country", "email"]))
 
     countries = ['France', 'Poland']
-    actual_df = filter_clients_by_countries(source_df, countries)
+    actual_df = filter_col(source_df, "country", countries)
 
     expected_data = [
         (1, 'France', '@1'),
         (3, 'Poland', '@3')
     ]
-    expected_df = (spark.createDataFrame(expected_data, ["id", "country", "email"]))
+    expected_df = (spark.createDataFrame(
+        expected_data, ["id", "country", "email"]))
 
     assert_df_equality(actual_df, expected_df)
 
@@ -52,9 +55,10 @@ def test_filter_financial_by_active():
         (2, 'jcb', 1234123412341234, 'EUR', False, 'XL'),
         (3, 'jcb', 1234123412341234, 'EUR', True, 'XXL')
     ]
-    columns = ["id", "credit_card_type", "credit_card_number", "currency", "active", "account_type"]
+    columns = ["id", "credit_card_type", "credit_card_number",
+               "currency", "active", "account_type"]
     source_df = (spark.createDataFrame(source_data, columns))
-    actual_df = filter_financial_by_active(source_df)
+    actual_df = filter_col(source_df, "active", [True])
 
     expected_data = [
         (1, 'jcb', 1234123412341234, 'USD', True, 'L'),
@@ -92,6 +96,7 @@ def test_join_df():
 
     assert_df_equality(actual_df, expected_df)
 
+
 def test_drop_column():
     source_data = [
         (1, 'France', '@1'),
@@ -100,7 +105,8 @@ def test_drop_column():
         (4, 'Germany', '@4'),
         (5, 'Austria', '@5')
     ]
-    source_df = (spark.createDataFrame(source_data, ["id", "country", "email"]))
+    source_df = (spark.createDataFrame(
+        source_data, ["id", "country", "email"]))
 
     actual_df = drop_column(source_df, "email")
 

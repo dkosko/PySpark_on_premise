@@ -8,11 +8,12 @@ def create_result_dataset(client_path, finance_path, countries, mapping_finance)
     finance_df = read_csv(finance_path)
     renamed_finance_df = ren_columns(finance_df, mapping_finance)
 
-    active_finance = filter_financial_by_active(renamed_finance_df)
-    client_from_countries  = filter_clients_by_countries(client_df, countries)
+    active_finance = filter_col(renamed_finance_df, "active", [True])
+    client_from_countries = filter_col(client_df, "country", countries)
 
     merged_df = join_df(client_from_countries, active_finance, "id")
-    result_df = select_columns(merged_df, ["email", "credit_card_type", "account_type"])
+    result_df = select_columns(
+        merged_df, ["email", "credit_card_type", "account_type"])
     result_df.show(result_df.count())
     return result_df
 
@@ -25,9 +26,12 @@ def get_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-clients', type=str, help='<Required> Set flag', required=True)
-    parser.add_argument('-financial', type=str, help='<Required> Set flag', required=True)
-    parser.add_argument('-countries', nargs='+', help='<Required> Set flag', required=True)
+    parser.add_argument('-clients', type=str,
+                        help='<Required> Set flag', required=True)
+    parser.add_argument('-financial', type=str,
+                        help='<Required> Set flag', required=True)
+    parser.add_argument('-countries', nargs='+',
+                        help='<Required> Set flag', required=True)
 
     args = parser.parse_args()
     clients_path = args.clients
@@ -46,14 +50,18 @@ def start_application():
                'a': 'active',
                'ac_t': 'account_type'}
     clients_path, financial_path, countries = get_args()
-    logging.info(f'Got args parsed : {clients_path}, {financial_path}, {countries}')
+    logging.info(
+        f'Got args parsed : {clients_path}, {financial_path}, {countries}')
 
-    df = create_result_dataset(clients_path, financial_path, countries, mapping)
+    df = create_result_dataset(
+        clients_path, financial_path, countries, mapping)
     logging.info(f'Created result dataset')
     write_csv(df, 'client_data/')
 
+
 if __name__ == "__main__":
-    logging.basicConfig(filename='actions.log', filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(filename='actions.log', filemode='a', level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
     logging.info('Start application')
     start_application()
